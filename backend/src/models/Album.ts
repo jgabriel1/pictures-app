@@ -15,6 +15,9 @@ export class Album {
   @Column()
   user_id: string;
 
+  @Column()
+  cover_url: string;
+
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
   user: User;
