@@ -14,4 +14,6 @@ albumsRouter.delete(
   albumsController.delete
 );
 
+albumsRouter.patch('/', checkAuthenticationMiddleware, albumsController.update);
+
 export { albumsRouter };
