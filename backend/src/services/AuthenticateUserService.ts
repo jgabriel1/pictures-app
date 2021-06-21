@@ -35,8 +35,7 @@ export class AuthenticateUserService {
 
     // Generate token
     const tokenPayload = {
-      name: user.name,
-      email: user.email,
+      user_id: user.id,
     };
 
     const signedToken = jwt.sign(tokenPayload, config.jwtSecret, {
