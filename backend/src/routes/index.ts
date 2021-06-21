@@ -11,6 +11,6 @@ const router = Router();
 router.post('/users/register', usersController.create);
 router.post('/users/authenticate', authenticationController.create);
 
-router.use(albumsRouter);
+router.use('/albums', albumsRouter);
 
 export { router };

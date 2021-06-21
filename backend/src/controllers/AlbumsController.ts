@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { CreateAlbumService } from '../services/CreateAlbumService';
+import { DeleteAlbumService } from '../services/DeleteAlbumService';
 
 export class AlbumsController {
   public async create(req: Request, res: Response) {
@@ -21,5 +22,25 @@ export class AlbumsController {
     });
 
     return res.status(201).json({ album });
+  }
+
+  public async delete(req: Request, res: Response) {
+    const { user_id } = req;
+
+    if (!user_id)
+      return res.status(401).json({
+        error: 'Missing auth headers.',
+      });
+
+    const { album_id } = req.body;
+
+    const deleteAlbum = new DeleteAlbumService();
+
+    await deleteAlbum.execute({
+      user_id,
+      album_id,
+    });
+
+    return res.status(204);
   }
 }
