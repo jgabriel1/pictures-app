@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
+import { ListAlbumsService } from '../services/ListAlbumsService';
 import { CreateAlbumService } from '../services/CreateAlbumService';
 import { DeleteAlbumService } from '../services/DeleteAlbumService';
 import { EditAlbumService } from '../services/EditAlbumService';
-import { ListAlbumsService } from '../services/ListAlbumsService';
 
 export class AlbumsController {
   public async index(req: Request, res: Response) {
@@ -49,7 +49,7 @@ export class AlbumsController {
         error: 'Missing auth headers.',
       });
 
-    const { album_id } = req.body;
+    const { album_id } = req.params;
 
     const deleteAlbum = new DeleteAlbumService();
 
@@ -58,7 +58,7 @@ export class AlbumsController {
       album_id,
     });
 
-    return res.status(204);
+    return res.status(204).send();
   }
 
   public async update(req: Request, res: Response) {
@@ -69,7 +69,8 @@ export class AlbumsController {
         error: 'Missing auth headers.',
       });
 
-    const { album_id, data } = req.body;
+    const { album_id } = req.params;
+    const { data } = req.body;
 
     const editAlbum = new EditAlbumService();
 
@@ -78,6 +79,6 @@ export class AlbumsController {
       data,
     });
 
-    return res.status(204);
+    return res.status(204).send();
   }
 }

@@ -11,11 +11,15 @@ albumsRouter.get('/', checkAuthenticationMiddleware, albumsController.index);
 albumsRouter.post('/', checkAuthenticationMiddleware, albumsController.create);
 
 albumsRouter.delete(
-  '/',
+  '/:album_id',
   checkAuthenticationMiddleware,
   albumsController.delete
 );
 
-albumsRouter.patch('/', checkAuthenticationMiddleware, albumsController.update);
+albumsRouter.patch(
+  '/:album_id',
+  checkAuthenticationMiddleware,
+  albumsController.update
+);
 
 export { albumsRouter };
