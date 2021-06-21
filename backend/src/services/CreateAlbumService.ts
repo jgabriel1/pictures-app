@@ -27,6 +27,7 @@ export class CreateAlbumService {
       title,
       description,
       user_id,
+      cover_url: '', // TODO
     });
 
     await this.albumsRepository.save(album);
