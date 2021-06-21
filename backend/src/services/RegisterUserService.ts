@@ -22,12 +22,7 @@ export class RegisterUserService {
     email,
     password,
   }: IRequest): Promise<Partial<User>> {
-    // Check if name or email are taken
-    const nameAlreadyTaken = await this.usersRepository.findOne({ name });
-
-    if (!!nameAlreadyTaken)
-      throw new AppError('This username is already taken', 400);
-
+    // Check if email is already taken
     const emailAlreadyTaken = await this.usersRepository.findOne({ email });
 
     if (!!emailAlreadyTaken)
