@@ -6,6 +6,8 @@ const albumsController = new AlbumsController();
 
 const albumsRouter = Router();
 
+albumsRouter.get('/', checkAuthenticationMiddleware, albumsController.index);
+
 albumsRouter.post('/', checkAuthenticationMiddleware, albumsController.create);
 
 albumsRouter.delete(
