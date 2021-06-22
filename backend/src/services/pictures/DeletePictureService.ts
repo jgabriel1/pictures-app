@@ -30,7 +30,7 @@ export class DeletePictureService {
     // Delete picture data from database
     const { storage_name } = picture;
 
-    await this.picturesRepository.delete(picture);
+    await this.picturesRepository.delete(picture.id);
 
     // Delete file from storage
     await this.storageProvider.deleteFile(storage_name);
