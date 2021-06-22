@@ -14,6 +14,9 @@ export class Picture {
   album: Album;
 
   @Column()
+  storage_name: string;
+
+  @Column()
   title: string;
 
   @Column()
