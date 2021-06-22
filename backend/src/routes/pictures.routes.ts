@@ -17,4 +17,6 @@ picturesRouter.post(
   picturesController.create
 );
 
+picturesRouter.delete('/:picture_id', picturesController.delete);
+
 export { picturesRouter };

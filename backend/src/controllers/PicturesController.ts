@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { DeletePictureService } from '../services/DeletePictureService';
 import { ListPicturesForAlbumService } from '../services/ListPicturesForAlbumService';
 import { UploadPictureService } from '../services/UploadPictureService';
 
@@ -53,5 +54,23 @@ export class PicturesController {
     });
 
     return res.status(201).json({ picture });
+  }
+
+  public async delete(req: Request, res: Response) {
+    const { user_id } = req;
+
+    if (!user_id)
+      return res.status(401).json({ error: 'Missing auth headers.' });
+
+    const { picture_id } = req.params;
+
+    const deletePicture = new DeletePictureService();
+
+    await deletePicture.execute({
+      user_id,
+      picture_id,
+    });
+
+    return res.status(204).send();
   }
 }
