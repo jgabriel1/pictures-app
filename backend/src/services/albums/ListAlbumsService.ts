@@ -23,7 +23,7 @@ export class ListAlbumsService {
       id: album.id,
       title: album.title,
       description: album.description,
-      cover_url: album.cover_url,
+      cover_picture_name: album.cover_picture_name,
     }));
   }
 }

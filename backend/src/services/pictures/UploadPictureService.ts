@@ -75,6 +75,11 @@ export class UploadPictureService {
 
     await this.picturesRepository.save(picture);
 
+    // Update album cover picture
+    album.cover_picture_name = picture.storage_name;
+
+    await this.albumsRepository.save(album);
+
     return {
       id,
       title,
