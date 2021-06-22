@@ -1,6 +1,6 @@
 import { getRepository, Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
-import { Album } from '../models/Album';
+import { Album } from '../../models/Album';
 
 interface IRequest {
   user_id: string;
