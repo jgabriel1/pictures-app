@@ -9,6 +9,8 @@ const picturesRouter = Router();
 
 picturesRouter.use(checkAuthenticationMiddleware);
 
+picturesRouter.get('/:album_id', picturesController.index);
+
 picturesRouter.post(
   '/',
   fileUploadMiddleware('image'),

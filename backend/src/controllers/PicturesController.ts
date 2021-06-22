@@ -1,7 +1,26 @@
 import { Request, Response } from 'express';
+import { ListPicturesForAlbumService } from '../services/ListPicturesForAlbumService';
 import { UploadPictureService } from '../services/UploadPictureService';
 
 export class PicturesController {
+  public async index(req: Request, res: Response) {
+    const { user_id } = req;
+
+    if (!user_id)
+      return res.status(401).json({ error: 'Missing auth headers.' });
+
+    const { album_id } = req.params;
+
+    const listPictures = new ListPicturesForAlbumService();
+
+    const pictures = await listPictures.execute({
+      user_id,
+      album_id,
+    });
+
+    return res.json({ pictures });
+  }
+
   public async create(req: Request, res: Response) {
     const { user_id, file } = req;
 
