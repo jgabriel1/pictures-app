@@ -1,8 +1,8 @@
 import { getRepository, Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { hash } from 'bcrypt';
-import { AppError } from '../errors/AppError';
-import { User } from '../models/User';
+import { AppError } from '../../errors/AppError';
+import { User } from '../../models/User';
 
 interface IRequest {
   name: string;

@@ -1,5 +1,5 @@
 import { Repository, getRepository } from 'typeorm';
-import { Album } from '../models/Album';
+import { Album } from '../../models/Album';
 
 interface IRequest {
   album_id: string;

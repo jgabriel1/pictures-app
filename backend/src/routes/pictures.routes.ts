@@ -9,7 +9,7 @@ const picturesRouter = Router();
 
 picturesRouter.use(checkAuthenticationMiddleware);
 
-picturesRouter.get('/:album_id', picturesController.index);
+picturesRouter.get('/', picturesController.index);
 
 picturesRouter.post(
   '/',

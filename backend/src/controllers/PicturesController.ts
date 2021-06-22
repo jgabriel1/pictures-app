@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
-import { DeletePictureService } from '../services/DeletePictureService';
-import { ListPicturesForAlbumService } from '../services/ListPicturesForAlbumService';
-import { UploadPictureService } from '../services/UploadPictureService';
+import {
+  DeletePictureService,
+  ListPicturesForAlbumService,
+  UploadPictureService,
+} from '../services/pictures';
 
 export class PicturesController {
   public async index(req: Request, res: Response) {
@@ -10,7 +12,12 @@ export class PicturesController {
     if (!user_id)
       return res.status(401).json({ error: 'Missing auth headers.' });
 
-    const { album_id } = req.params;
+    const album_id = String(req.query.album_id);
+
+    if (!album_id)
+      return res.status(400).json({
+        error: 'Missing album_id to find pictures.',
+      });
 
     const listPictures = new ListPicturesForAlbumService();
 

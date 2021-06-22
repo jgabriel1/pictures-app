@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
-import { ListAlbumsService } from '../services/ListAlbumsService';
-import { CreateAlbumService } from '../services/CreateAlbumService';
-import { DeleteAlbumService } from '../services/DeleteAlbumService';
-import { EditAlbumService } from '../services/EditAlbumService';
+import {
+  ListAlbumsService,
+  CreateAlbumService,
+  DeleteAlbumService,
+  EditAlbumService,
+} from '../services/albums';
 
 export class AlbumsController {
   public async index(req: Request, res: Response) {

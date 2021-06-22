@@ -1,6 +1,6 @@
 import { getRepository, Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
-import { Album } from '../models/Album';
+import { Album } from '../../models/Album';
 
 interface IRequest {
   user_id: string;
@@ -27,7 +27,6 @@ export class CreateAlbumService {
       title,
       description,
       user_id,
-      cover_url: '', // TODO
     });
 
     await this.albumsRepository.save(album);
