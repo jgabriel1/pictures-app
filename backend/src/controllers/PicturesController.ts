@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
-import { DeletePictureService } from '../services/DeletePictureService';
-import { ListPicturesForAlbumService } from '../services/ListPicturesForAlbumService';
-import { UploadPictureService } from '../services/UploadPictureService';
+import {
+  DeletePictureService,
+  ListPicturesForAlbumService,
+  UploadPictureService,
+} from '../services/pictures';
 
 export class PicturesController {
   public async index(req: Request, res: Response) {

@@ -1,7 +1,7 @@
 import { Repository, getRepository } from 'typeorm';
-import { AppError } from '../errors/AppError';
-import { Album } from '../models/Album';
-import { Picture } from '../models/Picture';
+import { AppError } from '../../errors/AppError';
+import { Album } from '../../models/Album';
+import { Picture } from '../../models/Picture';
 
 interface IRequest {
   user_id: string;

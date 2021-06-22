@@ -1,9 +1,9 @@
 import { getRepository, Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
-import { AppError } from '../errors/AppError';
-import { Album } from '../models/Album';
-import { Picture } from '../models/Picture';
-import { StorageProvider } from '../providers/StorageProvider';
+import { AppError } from '../../errors/AppError';
+import { Album } from '../../models/Album';
+import { Picture } from '../../models/Picture';
+import { StorageProvider } from '../../providers/StorageProvider';
 
 interface IRequest {
   user_id: string;
