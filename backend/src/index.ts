@@ -1,16 +1,16 @@
 import 'reflect-metadata';
-
 import express, { NextFunction, Request, Response } from 'express';
 import 'express-async-errors';
-
 import { connectToDatabase } from './database/connection';
 import { router } from './routes';
 import { AppError } from './errors/AppError';
+import config from './config';
 
 connectToDatabase();
 
 const app = express();
 
+app.use('/static', express.static(config.staticFolder));
 app.use(express.json());
 app.use(router);
 
