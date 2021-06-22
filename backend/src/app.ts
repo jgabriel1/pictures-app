@@ -1,5 +1,6 @@
 import express, { Express } from 'express';
 import 'express-async-errors';
+import cors from 'cors';
 import config from './config';
 import { connectToDatabase } from './database/connection';
 import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware';
@@ -14,6 +15,7 @@ export class App {
   private async setup() {
     await connectToDatabase();
 
+    this.app.use(cors());
     this.app.use('/static', express.static(config.staticFolder));
     this.app.use(express.json());
     this.app.use(router);
