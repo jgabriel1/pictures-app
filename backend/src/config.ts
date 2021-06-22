@@ -10,4 +10,5 @@ export default {
   tempFolder,
   uploadsFolder,
   staticFolder,
+  port: Number(process.env.PORT) || 3333,
 };
