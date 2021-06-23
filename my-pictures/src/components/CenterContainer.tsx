@@ -1,14 +1,11 @@
-import { Box, Flex } from '@chakra-ui/react';
-import React, { ReactNode } from 'react';
+import { Box, Flex, BoxProps } from '@chakra-ui/react';
 
-interface CenterContainerProps {
-  children: ReactNode;
-}
+interface CenterContainerProps extends BoxProps {}
 
-export const CenterContainer = ({ children }: CenterContainerProps) => (
+export const CenterContainer = (boxProps: CenterContainerProps) => (
   <Flex justify="center" align="center" h="100vh">
-    <Box as="form" p="8" w="sm" borderRadius="lg" bg="gray.700">
-      {children}
+    <Box p="8" w="sm" borderRadius="lg" bg="gray.700" {...boxProps}>
+      {boxProps.children}
     </Box>
   </Flex>
 );

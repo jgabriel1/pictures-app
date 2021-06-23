@@ -1,11 +1,32 @@
 import { Flex, Heading, VStack, Button, Text } from '@chakra-ui/react';
-import React from 'react';
+import { useRouter } from 'next/router';
+import { useForm } from 'react-hook-form';
 import { CenterContainer } from '../components/CenterContainer';
-import { FormInput } from '../components/FormInput';
+import { InputField } from '../components/InputField';
+
+interface SignUpFormData {
+  name: string;
+  email: string;
+  password: string;
+}
 
 export default function SignUp() {
+  const router = useRouter();
+
+  const { register, handleSubmit, formState } = useForm<SignUpFormData>();
+
+  const handleSubmitSignUpForm = handleSubmit(data => {
+    console.log(data);
+
+    return new Promise(resolve => setTimeout(() => resolve(data), 1000));
+  });
+
+  const handleReturnToLogon = () => {
+    router.back();
+  };
+
   return (
-    <CenterContainer>
+    <CenterContainer as="form" onSubmit={handleSubmitSignUpForm}>
       <Flex flexDir="column" mb="8" align="center">
         <Heading as="h2" fontSize="4xl">
           my.Pictures
@@ -17,16 +38,45 @@ export default function SignUp() {
           Faça seu cadastro:
         </Text>
 
-        <FormInput label="Nome" />
+        <InputField
+          id="name"
+          type="text"
+          label="Nome"
+          isInvalid={!!formState.errors.name}
+          isRequiredError={formState.errors.name?.type === 'required'}
+          {...register('name', { required: true })}
+        />
 
-        <FormInput label="E-Mail" />
+        <InputField
+          id="email"
+          type="email"
+          label="E-Mail"
+          isInvalid={!!formState.errors.email}
+          isRequiredError={formState.errors.email?.type === 'required'}
+          {...register('email', { required: true })}
+        />
 
-        <FormInput label="Senha" />
+        <InputField
+          id="password"
+          type="password"
+          label="Senha"
+          isInvalid={!!formState.errors.password}
+          isRequiredError={formState.errors.password?.type === 'required'}
+          {...register('password', { required: true })}
+        />
       </VStack>
 
       <Flex w="100%" justify="space-between" align="center" mt="8">
-        <Button variant="ghost">Cancelar</Button>
-        <Button size="lg" colorScheme="blue">
+        <Button variant="ghost" onClick={handleReturnToLogon}>
+          Cancelar
+        </Button>
+
+        <Button
+          size="lg"
+          type="submit"
+          colorScheme="blue"
+          isLoading={formState.isSubmitting}
+        >
           Concluir
         </Button>
       </Flex>
