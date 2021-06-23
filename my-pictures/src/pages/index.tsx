@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { CenterContainer } from '../components/CenterContainer';
 import { InputField } from '../components/InputField';
+import { useAuth } from '../contexts/auth';
 
 interface LogonFormData {
   email: string;
@@ -12,17 +13,25 @@ interface LogonFormData {
 export default function Home() {
   const router = useRouter();
 
+  const { login } = useAuth();
+
   const { register, handleSubmit, formState } = useForm<LogonFormData>();
 
   const handleNavigateToSignUp = () => {
     router.push('signup');
   };
 
-  const handleSubmitLogonForm = handleSubmit(data => {
-    console.log(data);
-
-    return new Promise(resolve => setTimeout(() => resolve(data), 1000));
-  });
+  const handleSubmitLogonForm = handleSubmit(
+    async data => {
+      await login({
+        email: data.email,
+        password: data.password,
+      });
+    },
+    error => {
+      console.log(error);
+    }
+  );
 
   return (
     <CenterContainer as="form" onSubmit={handleSubmitLogonForm}>
