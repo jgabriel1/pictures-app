@@ -1,4 +1,5 @@
 import { Flex, Heading, VStack, Button, Text } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { CenterContainer } from '../components/CenterContainer';
 import { InputField } from '../components/InputField';
@@ -10,6 +11,8 @@ interface SignUpFormData {
 }
 
 export default function SignUp() {
+  const router = useRouter();
+
   const { register, handleSubmit, formState } = useForm<SignUpFormData>();
 
   const handleSubmitSignUpForm = handleSubmit(data => {
@@ -17,6 +20,10 @@ export default function SignUp() {
 
     return new Promise(resolve => setTimeout(() => resolve(data), 1000));
   });
+
+  const handleReturnToLogon = () => {
+    router.back();
+  };
 
   return (
     <CenterContainer as="form" onSubmit={handleSubmitSignUpForm}>
@@ -60,7 +67,10 @@ export default function SignUp() {
       </VStack>
 
       <Flex w="100%" justify="space-between" align="center" mt="8">
-        <Button variant="ghost">Cancelar</Button>
+        <Button variant="ghost" onClick={handleReturnToLogon}>
+          Cancelar
+        </Button>
+
         <Button
           size="lg"
           type="submit"
