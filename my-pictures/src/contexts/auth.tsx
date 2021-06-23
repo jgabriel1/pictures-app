@@ -51,7 +51,7 @@ export const AuthProvider: FC = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      api.defaults.headers['Authorization'] = token;
+      api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
       setCookie(undefined, TOKEN_STORAGE_KEY, token);
 
