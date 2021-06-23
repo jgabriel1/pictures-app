@@ -9,10 +9,16 @@ import {
   Text,
   Image,
 } from '@chakra-ui/react';
-import React from 'react';
+import { useAuth } from '../../contexts/auth';
 
 export default function Albums() {
   const albums = Array(6).fill(null);
+
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   return (
     <Container maxW="container.lg" h="100vh">
@@ -27,7 +33,9 @@ export default function Albums() {
               Olá, Gabriel
             </Text>
 
-            <Button size="lg">Sair</Button>
+            <Button size="lg" onClick={handleLogout}>
+              Sair
+            </Button>
           </HStack>
         </Flex>
 
