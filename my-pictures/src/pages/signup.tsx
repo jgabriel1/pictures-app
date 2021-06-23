@@ -1,16 +1,7 @@
-import {
-  Flex,
-  Heading,
-  VStack,
-  Button,
-  Text,
-  FormControl,
-  FormLabel,
-  Input,
-  FormErrorMessage,
-} from '@chakra-ui/react';
+import { Flex, Heading, VStack, Button, Text } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { CenterContainer } from '../components/CenterContainer';
+import { InputField } from '../components/InputField';
 
 interface SignUpFormData {
   name: string;
@@ -40,39 +31,32 @@ export default function SignUp() {
           Faça seu cadastro:
         </Text>
 
-        <FormControl id="name" isInvalid={!!formState.errors.name}>
-          <FormLabel>Nome</FormLabel>
+        <InputField
+          id="name"
+          type="text"
+          label="Nome"
+          isInvalid={!!formState.errors.name}
+          isRequiredError={formState.errors.name?.type === 'required'}
+          {...register('name', { required: true })}
+        />
 
-          <Input {...register('name', { required: true })} />
+        <InputField
+          id="email"
+          type="email"
+          label="E-Mail"
+          isInvalid={!!formState.errors.email}
+          isRequiredError={formState.errors.email?.type === 'required'}
+          {...register('email', { required: true })}
+        />
 
-          <FormErrorMessage>
-            {formState.errors.name?.type === 'required' && 'Campo Obrigatório'}
-          </FormErrorMessage>
-        </FormControl>
-
-        <FormControl id="email" isInvalid={!!formState.errors.email}>
-          <FormLabel>E-Mail</FormLabel>
-
-          <Input type="email" {...register('email', { required: true })} />
-
-          <FormErrorMessage>
-            {formState.errors.email?.type === 'required' && 'Campo Obrigatório'}
-          </FormErrorMessage>
-        </FormControl>
-
-        <FormControl id="password" isInvalid={!!formState.errors.password}>
-          <FormLabel>Senha</FormLabel>
-
-          <Input
-            type="password"
-            {...register('password', { required: true })}
-          />
-
-          <FormErrorMessage>
-            {formState.errors.password?.type === 'required' &&
-              'Campo Obrigatório'}
-          </FormErrorMessage>
-        </FormControl>
+        <InputField
+          id="password"
+          type="password"
+          label="Senha"
+          isInvalid={!!formState.errors.password}
+          isRequiredError={formState.errors.password?.type === 'required'}
+          {...register('password', { required: true })}
+        />
       </VStack>
 
       <Flex w="100%" justify="space-between" align="center" mt="8">

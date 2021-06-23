@@ -1,16 +1,8 @@
-import {
-  Button,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Heading,
-  Input,
-  VStack,
-} from '@chakra-ui/react';
+import { Button, Flex, Heading, VStack } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { CenterContainer } from '../components/CenterContainer';
+import { InputField } from '../components/InputField';
 
 interface LogonFormData {
   email: string;
@@ -41,29 +33,23 @@ export default function Home() {
       </Flex>
 
       <VStack spacing="4">
-        <FormControl id="email" isInvalid={!!formState.errors.email}>
-          <FormLabel>E-Mail</FormLabel>
+        <InputField
+          id="email"
+          type="email"
+          label="E-Mail"
+          isInvalid={!!formState.errors.email}
+          isRequiredError={formState.errors.email?.type === 'required'}
+          {...register('email', { required: true })}
+        />
 
-          <Input type="email" {...register('email', { required: true })} />
-
-          <FormErrorMessage>
-            {formState.errors.email?.type === 'required' && 'Campo Obrigatório'}
-          </FormErrorMessage>
-        </FormControl>
-
-        <FormControl id="password" isInvalid={!!formState.errors.password}>
-          <FormLabel>Senha</FormLabel>
-
-          <Input
-            type="password"
-            {...register('password', { required: true })}
-          />
-
-          <FormErrorMessage>
-            {formState.errors.password?.type === 'required' &&
-              'Campo Obrigatório'}
-          </FormErrorMessage>
-        </FormControl>
+        <InputField
+          id="password"
+          type="password"
+          label="Senha"
+          isInvalid={!!formState.errors.password}
+          isRequiredError={formState.errors.password?.type === 'required'}
+          {...register('password', { required: true })}
+        />
       </VStack>
 
       <Flex w="100%" justify="space-between" align="center" mt="8">
