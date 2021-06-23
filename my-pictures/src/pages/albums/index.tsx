@@ -1,16 +1,29 @@
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Grid,
-  Text,
-  Image,
-} from '@chakra-ui/react';
+import { Box, Button, Container, Flex, Grid, Text } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
 import { Header } from '../../components/Header';
+import { PictureImage } from '../../components/PictureImage';
+import { api } from '../../services/api';
+
+interface Album {
+  id: string;
+  title: string;
+  description: string;
+  cover_picture_name: string;
+}
 
 export default function Albums() {
-  const albums = Array(6).fill(null);
+  const router = useRouter();
+
+  const { data: albums } = useQuery<Album[]>('ALBUMS', async () => {
+    const { data } = await api.get('albums');
+
+    return data.albums;
+  });
+
+  const handleNavigateToAlbumPictures = (albumId: string) => {
+    router.push(`/albums/${albumId}`);
+  };
 
   return (
     <Container maxW="container.lg" h="100vh">
@@ -18,18 +31,28 @@ export default function Albums() {
         <Header />
 
         <Box as="main" flex="1" overflowY="auto">
-          <Grid templateColumns="repeat(4, 1fr)" gap={8}>
-            {albums.map(() => (
-              <Box p="4" bg="gray.700" borderRadius="lg">
-                <Image src="https://avatars.githubusercontent.com/u/62442043?v=4" />
+          <Grid templateColumns="repeat(3, 1fr)" gap={8}>
+            {albums &&
+              albums.map(album => (
+                <Box
+                  key={`albums:${album.id}`}
+                  p="4"
+                  bg="gray.700"
+                  borderRadius="lg"
+                  onClick={() => handleNavigateToAlbumPictures(album.id)}
+                >
+                  <PictureImage
+                    imageId={album.cover_picture_name}
+                    alt={`${album.title}-cover`}
+                  />
 
-                <Text fontSize="lg" fontWeight="medium" my="2">
-                  Album
-                </Text>
+                  <Text fontSize="lg" fontWeight="medium" my="2">
+                    {album.title}
+                  </Text>
 
-                <Text>Descrição desse album </Text>
-              </Box>
-            ))}
+                  <Text>{album.description}</Text>
+                </Box>
+              ))}
           </Grid>
         </Box>
 
