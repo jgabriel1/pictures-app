@@ -4,40 +4,18 @@ import {
   Container,
   Flex,
   Grid,
-  Heading,
-  HStack,
   Text,
   Image,
 } from '@chakra-ui/react';
-import { useAuth } from '../../contexts/auth';
+import { Header } from '../../components/Header';
 
 export default function Albums() {
   const albums = Array(6).fill(null);
 
-  const { logout } = useAuth();
-
-  const handleLogout = async () => {
-    await logout();
-  };
-
   return (
     <Container maxW="container.lg" h="100vh">
       <Flex flexDir="column" justify="space-between" h="100%">
-        <Flex as="header" py="8" justify="space-between" align="center">
-          <Heading as="h2" fontSize="4xl">
-            my.Pictures
-          </Heading>
-
-          <HStack spacing="4">
-            <Text fontSize="xl" fontWeight="medium">
-              Olá, Gabriel
-            </Text>
-
-            <Button size="lg" onClick={handleLogout}>
-              Sair
-            </Button>
-          </HStack>
-        </Flex>
+        <Header />
 
         <Box as="main" flex="1" overflowY="auto">
           <Grid templateColumns="repeat(4, 1fr)" gap={8}>

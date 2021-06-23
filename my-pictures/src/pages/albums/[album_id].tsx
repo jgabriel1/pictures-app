@@ -2,14 +2,12 @@ import {
   Container,
   Flex,
   Heading,
-  HStack,
-  Button,
   Text,
   Grid,
   Box,
   Image,
 } from '@chakra-ui/react';
-import React from 'react';
+import { Header } from '../../components/Header';
 
 export default function Album() {
   const pictures = Array(6).fill(null);
@@ -17,19 +15,7 @@ export default function Album() {
   return (
     <Container maxW="container.lg" h="100vh">
       <Flex flexDir="column" justify="space-between" h="100%">
-        <Flex as="header" py="8" justify="space-between" align="center">
-          <Heading as="h2" fontSize="4xl">
-            my.Pictures
-          </Heading>
-
-          <HStack spacing="4">
-            <Text fontSize="xl" fontWeight="medium">
-              Olá, Gabriel
-            </Text>
-
-            <Button size="lg">Sair</Button>
-          </HStack>
-        </Flex>
+        <Header />
 
         <Box as="main" flex="1" overflowY="auto">
           <Box mb="4">
