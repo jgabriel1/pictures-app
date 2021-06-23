@@ -1,8 +1,23 @@
-import { Container, Flex, Heading, Text, Grid, Box } from '@chakra-ui/react';
+import {
+  Container,
+  Flex,
+  Heading,
+  Text,
+  Grid,
+  Box,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuOptionGroup,
+  MenuItemOption,
+} from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { Header } from '../../components/Header';
 import { PictureImage } from '../../components/PictureImage';
+import { PicturesTable } from '../../components/PicturesTable';
 import { useAlbum } from '../../contexts/albums';
 import { api } from '../../services/api';
 
@@ -34,41 +49,73 @@ export default function Album() {
     }
   );
 
+  const [albumViewMode, setAlbumViewMode] = useState<'GRID' | 'TABLE'>('GRID');
+
   return (
     <Container maxW="container.lg" h="100vh">
       <Flex flexDir="column" justify="space-between" h="100%">
         <Header />
 
         <Box as="main" flex="1" overflowY="auto">
-          <Box mb="4">
-            <Heading fontSize="2xl" mb="2">
-              {album.title}
-            </Heading>
+          <Flex w="full" justify="space-between" align="center" mb="8">
+            <Box>
+              <Heading fontSize="2xl" mb="2">
+                {album.title}
+              </Heading>
 
-            <Text fontSize="md">{album.description}</Text>
-          </Box>
+              <Text fontSize="md">{album.description}</Text>
+            </Box>
 
-          <Grid templateColumns="repeat(3, 1fr)" gap={8}>
-            {pictures &&
-              pictures.map(picture => (
-                <Box
-                  p="4"
-                  bg="gray.700"
-                  borderRadius="lg"
-                  /*
+            <Menu>
+              <MenuButton as={Button} mr="2">
+                Visualização
+              </MenuButton>
+
+              <MenuList minW="150" onChange={console.log}>
+                <MenuOptionGroup
+                  type="radio"
+                  value={albumViewMode}
+                  onChange={v => setAlbumViewMode(v as 'GRID' | 'TABLE')}
+                >
+                  <MenuItemOption value="GRID">Miniaturas</MenuItemOption>
+                  <MenuItemOption value="TABLE">Tabela</MenuItemOption>
+                </MenuOptionGroup>
+              </MenuList>
+            </Menu>
+          </Flex>
+
+          {albumViewMode === 'GRID' ? (
+            <Grid templateColumns="repeat(3, 1fr)" gap={8}>
+              {pictures &&
+                pictures.map(picture => (
+                  <Box
+                    key={`pictures:${picture.id}`}
+                    p="4"
+                    bg="gray.700"
+                    borderRadius="lg"
+                    /*
                 TODO: Click to open a modal with full picture, title on top and
                 description on bottom
                 */
-                >
-                  <PictureImage imageId={picture.storage_name} />
+                  >
+                    <PictureImage imageId={picture.storage_name} />
 
-                  <Text fontSize="lg" fontWeight="medium" mt="2">
-                    {picture.title}
-                  </Text>
-                </Box>
-              ))}
-          </Grid>
+                    <Text fontSize="lg" fontWeight="medium" mt="2">
+                      {picture.title}
+                    </Text>
+                  </Box>
+                ))}
+            </Grid>
+          ) : (
+            <PicturesTable pictures={pictures} />
+          )}
         </Box>
+
+        <Flex as="footer" align="center" justify="flex-end" pb="8" pt="4">
+          <Button colorScheme="blue" size="lg">
+            Adicionar foto
+          </Button>
+        </Flex>
       </Flex>
     </Container>
   );
