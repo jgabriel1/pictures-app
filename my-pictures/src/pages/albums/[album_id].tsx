@@ -1,16 +1,38 @@
-import {
-  Container,
-  Flex,
-  Heading,
-  Text,
-  Grid,
-  Box,
-  Image,
-} from '@chakra-ui/react';
+import { Container, Flex, Heading, Text, Grid, Box } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
 import { Header } from '../../components/Header';
+import { PictureImage } from '../../components/PictureImage';
+import { useAlbum } from '../../contexts/albums';
+import { api } from '../../services/api';
+
+interface Picture {
+  id: string;
+  title: string;
+  description: string;
+  acquisition_date: string;
+  main_color: string;
+  file_size: number;
+  storage_name: string;
+}
 
 export default function Album() {
-  const pictures = Array(6).fill(null);
+  const router = useRouter();
+
+  const album_id = router.query.album_id as string;
+
+  const album = useAlbum(album_id);
+
+  const { data: pictures } = useQuery<Picture[]>(
+    ['PICTURES', album_id],
+    async () => {
+      const { data: responseData } = await api.get('pictures', {
+        params: { album_id },
+      });
+
+      return responseData.pictures;
+    }
+  );
 
   return (
     <Container maxW="container.lg" h="100vh">
@@ -20,35 +42,31 @@ export default function Album() {
         <Box as="main" flex="1" overflowY="auto">
           <Box mb="4">
             <Heading fontSize="2xl" mb="2">
-              Album 1
+              {album.title}
             </Heading>
 
-            <Text fontSize="md">
-              Album 1 description Lorem ipsum dolor sit, amet consectetur
-              adipisicing elit. Atque, mollitia aliquid error sed saepe vero
-              aperiam id dolore voluptate unde tempora quae, voluptatibus
-              doloremque tempore iusto! Doloribus nesciunt necessitatibus nemo.
-            </Text>
+            <Text fontSize="md">{album.description}</Text>
           </Box>
 
-          <Grid templateColumns="repeat(4, 1fr)" gap={8}>
-            {pictures.map(() => (
-              <Box
-                p="4"
-                bg="gray.700"
-                borderRadius="lg"
-                /*
+          <Grid templateColumns="repeat(3, 1fr)" gap={8}>
+            {pictures &&
+              pictures.map(picture => (
+                <Box
+                  p="4"
+                  bg="gray.700"
+                  borderRadius="lg"
+                  /*
                 TODO: Click to open a modal with full picture, title on top and
                 description on bottom
                 */
-              >
-                <Image src="https://avatars.githubusercontent.com/u/62442043?v=4" />
+                >
+                  <PictureImage imageId={picture.storage_name} />
 
-                <Text fontSize="lg" fontWeight="medium" mt="2">
-                  Picture
-                </Text>
-              </Box>
-            ))}
+                  <Text fontSize="lg" fontWeight="medium" mt="2">
+                    {picture.title}
+                  </Text>
+                </Box>
+              ))}
           </Grid>
         </Box>
       </Flex>
