@@ -1,6 +1,7 @@
 import { createContext, FC, useContext, useEffect, useState } from 'react';
-import { api } from '../services/api';
 import { useRouter } from 'next/router';
+import { destroyCookie, parseCookies, setCookie } from 'nookies';
+import { api } from '../services/api';
 
 interface LoginInformation {
   email: string;
@@ -18,10 +19,18 @@ interface AuthContextData {
 
 const AuthContext = createContext({} as AuthContextData);
 
+const TOKEN_STORAGE_KEY = '@my.Pictures:authToken';
+
 export const AuthProvider: FC = ({ children }) => {
   const router = useRouter();
 
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState(() => {
+    const cookies = parseCookies();
+
+    const storedToken = cookies[TOKEN_STORAGE_KEY];
+
+    return storedToken;
+  });
 
   const login = async ({ email, password }: LoginInformation) => {
     try {
@@ -44,8 +53,12 @@ export const AuthProvider: FC = ({ children }) => {
     if (token) {
       api.defaults.headers['Authorization'] = token;
 
+      setCookie(undefined, TOKEN_STORAGE_KEY, token);
+
       router.push('/albums');
     } else {
+      destroyCookie(undefined, TOKEN_STORAGE_KEY);
+
       router.push('/');
     }
   }, [token]);
