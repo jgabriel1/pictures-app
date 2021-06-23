@@ -1,8 +1,18 @@
-import { Flex, Heading, VStack, Button, Text } from '@chakra-ui/react';
+import {
+  Flex,
+  Heading,
+  VStack,
+  Button,
+  Text,
+  FormControl,
+  FormErrorMessage,
+} from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { CenterContainer } from '../components/CenterContainer';
 import { InputField } from '../components/InputField';
+import { api } from '../services/api';
 
 interface SignUpFormData {
   name: string;
@@ -14,11 +24,20 @@ export default function SignUp() {
   const router = useRouter();
 
   const { register, handleSubmit, formState } = useForm<SignUpFormData>();
+  const [isRegisterError, setIsRegisterError] = useState(false);
 
-  const handleSubmitSignUpForm = handleSubmit(data => {
-    console.log(data);
+  const handleSubmitSignUpForm = handleSubmit(async data => {
+    try {
+      await api.post('users/register', {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
 
-    return new Promise(resolve => setTimeout(() => resolve(data), 1000));
+      router.push('/');
+    } catch {
+      setIsRegisterError(true);
+    }
   });
 
   const handleReturnToLogon = () => {
@@ -64,6 +83,14 @@ export default function SignUp() {
           isRequiredError={formState.errors.password?.type === 'required'}
           {...register('password', { required: true })}
         />
+
+        {isRegisterError && (
+          <FormControl isInvalid={isRegisterError}>
+            <FormErrorMessage>
+              Ocorreu um erro no cadastro. Tente novamente.
+            </FormErrorMessage>
+          </FormControl>
+        )}
       </VStack>
 
       <Flex w="100%" justify="space-between" align="center" mt="8">
