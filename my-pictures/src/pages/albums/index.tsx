@@ -1,29 +1,22 @@
+import { useEffect } from 'react';
 import { Box, Button, Container, Flex, Grid, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
 import { Header } from '../../components/Header';
 import { PictureImage } from '../../components/PictureImage';
-import { api } from '../../services/api';
-
-interface Album {
-  id: string;
-  title: string;
-  description: string;
-  cover_picture_name: string;
-}
+import { useAlbums } from '../../contexts/albums';
 
 export default function Albums() {
   const router = useRouter();
 
-  const { data: albums } = useQuery<Album[]>('ALBUMS', async () => {
-    const { data } = await api.get('albums');
-
-    return data.albums;
-  });
+  const { albums, fetchAlbums } = useAlbums();
 
   const handleNavigateToAlbumPictures = (albumId: string) => {
     router.push(`/albums/${albumId}`);
   };
+
+  useEffect(() => {
+    fetchAlbums();
+  }, []);
 
   return (
     <Container maxW="container.lg" h="100vh">
