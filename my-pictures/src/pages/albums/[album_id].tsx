@@ -109,7 +109,7 @@ export default function Album() {
       <Flex flexDir="column" justify="space-between" h="100%">
         <Header />
 
-        <Box as="main" flex="1" overflowY="auto">
+        <Box as="main" flex="1">
           <Flex w="full" justify="space-between" align="center" mb="8">
             <Box>
               <Heading fontSize="2xl" mb="2">

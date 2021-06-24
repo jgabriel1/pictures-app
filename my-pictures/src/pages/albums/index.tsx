@@ -26,7 +26,7 @@ export default function Albums() {
       <Flex flexDir="column" justify="space-between" h="100%">
         <Header />
 
-        <Box as="main" flex="1" overflowY="auto">
+        <Box as="main" flex="1">
           <ImageGrid>
             {albums &&
               albums.map(album => (
