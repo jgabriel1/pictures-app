@@ -9,14 +9,15 @@ import {
   ModalOverlay,
   ModalProps,
   useDisclosure,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useQueryClient } from 'react-query';
-import { api } from '../services/api';
+import { useMutation, useQueryClient } from 'react-query';
 import { InputField } from './InputField';
 import { TextareaField } from './TextareaField';
+import { api } from '../services/api';
 
 interface NewAlbumFormData {
   title: string;
@@ -28,15 +29,43 @@ interface CreateNewAlbumModalProps extends Omit<ModalProps, 'children'> {}
 export const CreateNewAlbumModal = ({
   ...modalProps
 }: CreateNewAlbumModalProps) => {
+  const toast = useToast({
+    isClosable: true,
+    duration: 3000,
+  });
+
   const queryClient = useQueryClient();
+
+  const { mutateAsync: createAlbum } = useMutation(
+    async (data: NewAlbumFormData) => {
+      try {
+        await api.post('albums', {
+          title: data.title,
+          description: data.description,
+        });
+      } catch {
+        toast({
+          title: 'Erro ao criar álbum',
+          description: `Ocorreu um erro inesperado ao criar o álbum ${data.title}`,
+          status: 'error',
+        });
+      }
+    }
+  );
 
   const { register, handleSubmit, formState, reset } =
     useForm<NewAlbumFormData>();
 
   const handleSubmitNewAlbum = handleSubmit(async data => {
-    await api.post('albums', {
+    await createAlbum({
       title: data.title,
       description: data.description,
+    });
+
+    toast({
+      title: 'Novo álbum criado',
+      description: `Album ${data.title} criado.`,
+      status: 'success',
     });
 
     await queryClient.invalidateQueries({ queryKey: 'ALBUMS' });
