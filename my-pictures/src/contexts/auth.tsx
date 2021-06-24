@@ -57,8 +57,6 @@ export const AuthProvider: FC = ({ children }) => {
 
   const logout = async () => {
     setToken('');
-
-    router.push('/');
   };
 
   useEffect(() => {
@@ -68,6 +66,8 @@ export const AuthProvider: FC = ({ children }) => {
       setCookie(undefined, TOKEN_COOKIE_KEY, token);
     } else {
       destroyCookie(undefined, TOKEN_COOKIE_KEY);
+
+      router.push('/');
     }
   }, [token]);
 

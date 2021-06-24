@@ -35,6 +35,8 @@ export const AlbumsProvider: FC = ({ children }) => {
   useEffect(() => {
     if (isLoggedIn) {
       dispatchShouldFetch.on();
+    } else {
+      dispatchShouldFetch.off();
     }
   }, [isLoggedIn]);
 
