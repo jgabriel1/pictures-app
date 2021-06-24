@@ -11,6 +11,7 @@ import {
   MenuList,
   MenuOptionGroup,
   MenuItemOption,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -18,6 +19,10 @@ import { useQuery } from 'react-query';
 import { Header } from '../../components/Header';
 import { PictureImage } from '../../components/PictureImage';
 import { PicturesTable } from '../../components/PicturesTable';
+import {
+  SendNewPictureModal,
+  useNewPictureModal,
+} from '../../components/SendNewPictureModal';
 import { useAlbum } from '../../contexts/albums';
 import { api } from '../../services/api';
 
@@ -50,6 +55,8 @@ export default function Album() {
   );
 
   const [albumViewMode, setAlbumViewMode] = useState<'GRID' | 'TABLE'>('GRID');
+
+  const { isOpen, onClose, onOpen } = useNewPictureModal();
 
   return (
     <Container maxW="container.lg" h="100vh">
@@ -112,11 +119,17 @@ export default function Album() {
         </Box>
 
         <Flex as="footer" align="center" justify="flex-end" pb="8" pt="4">
-          <Button colorScheme="blue" size="lg">
+          <Button colorScheme="blue" size="lg" onClick={onOpen}>
             Adicionar foto
           </Button>
         </Flex>
       </Flex>
+
+      <SendNewPictureModal
+        albumId={album_id}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </Container>
   );
 }
