@@ -1,7 +1,6 @@
 import {
   Box,
   Modal,
-  ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalFooter,
@@ -11,8 +10,9 @@ import {
   Text,
   Button,
   useToast,
+  Center,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { api } from '../services/api';
 import { PictureImage } from './PictureImage';
@@ -77,9 +77,9 @@ export const PictureDetailModal = ({
 
         <ModalHeader>{picture?.title}</ModalHeader>
 
-        <ModalBody>
+        <Center flex="1">
           {picture && <PictureImage imageId={picture.storage_name} />}
-        </ModalBody>
+        </Center>
 
         <ModalFooter>
           <Box w="full" h="full">
