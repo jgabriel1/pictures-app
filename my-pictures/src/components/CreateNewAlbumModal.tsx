@@ -16,6 +16,7 @@ import { useForm } from 'react-hook-form';
 import { useQueryClient } from 'react-query';
 import { api } from '../services/api';
 import { InputField } from './InputField';
+import { TextareaField } from './TextareaField';
 
 interface NewAlbumFormData {
   title: string;
@@ -68,7 +69,7 @@ export const CreateNewAlbumModal = ({
               {...register('title', { required: true })}
             />
 
-            <InputField
+            <TextareaField
               id="description"
               type="textarea"
               label="Descrição"

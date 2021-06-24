@@ -15,7 +15,7 @@ import {
   FormControl,
   FormErrorMessage,
 } from '@chakra-ui/react';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useQueryClient } from 'react-query';
 import { useDropzone } from 'react-dropzone';
@@ -23,6 +23,7 @@ import { getPalette } from 'react-palette';
 import { format as formatDate } from 'date-fns';
 import { InputField } from './InputField';
 import { api } from '../services/api';
+import { TextareaField } from './TextareaField';
 
 interface NewPictureFormData {
   image: File;
@@ -141,7 +142,7 @@ export const SendNewPictureModal = ({
               {...register('title', { required: true })}
             />
 
-            <InputField
+            <TextareaField
               id="description"
               type="textarea"
               label="Descrição"
