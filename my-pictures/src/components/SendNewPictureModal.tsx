@@ -67,10 +67,9 @@ export const SendNewPictureModal = ({
         title: 'Foto enviada com sucesso.',
       });
 
-      // Signal to reload all pictures for this album
-      await queryClient.invalidateQueries({
-        queryKey: ['PICTURES', albumId],
-      });
+      // Signal to reload all pictures for this album and all albums
+      await queryClient.invalidateQueries(['PICTURES', albumId]);
+      await queryClient.invalidateQueries('ALBUMS');
 
       modalProps.onClose();
     } catch {
