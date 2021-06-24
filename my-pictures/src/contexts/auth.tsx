@@ -2,6 +2,7 @@ import { createContext, FC, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { destroyCookie, parseCookies, setCookie } from 'nookies';
 import { api } from '../services/api';
+import { useToast } from '@chakra-ui/react';
 
 interface LoginInformation {
   email: string;
@@ -22,6 +23,8 @@ const AuthContext = createContext({} as AuthContextData);
 const TOKEN_STORAGE_KEY = '@my.Pictures:authToken';
 
 export const AuthProvider: FC = ({ children }) => {
+  const toast = useToast({ isClosable: true, duration: 3000 });
+
   const router = useRouter();
 
   const [token, setToken] = useState(() => {
@@ -41,7 +44,11 @@ export const AuthProvider: FC = ({ children }) => {
 
       setToken(data.auth_token);
     } catch {
-      throw 'there was an error logging in';
+      toast({
+        status: 'error',
+        title: 'Erro no login',
+        description: 'Tente novamente.',
+      });
     }
   };
 
