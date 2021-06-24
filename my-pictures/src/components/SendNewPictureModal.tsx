@@ -12,6 +12,8 @@ import {
   useDisclosure,
   VStack,
   Text,
+  FormControl,
+  FormErrorMessage,
 } from '@chakra-ui/react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -53,8 +55,10 @@ export const SendNewPictureModal = ({
         const { vibrant } = await getPalette(URL.createObjectURL(file));
 
         setValue('main_color', vibrant || '');
-    },
-  });
+      },
+      maxFiles: 1,
+      accept: 'image/jpeg, image/png',
+    });
 
   return (
     <Modal {...modalProps} size="lg">
@@ -66,25 +70,33 @@ export const SendNewPictureModal = ({
 
         <ModalBody>
           <VStack w="full">
-            <Flex
-              {...getRootProps()}
-              w="full"
-              border="2px"
-              borderColor="gray.600"
-              borderRadius="md"
-              borderStyle="dashed"
-              h="120"
-              p="4"
-              justify="center"
-              align="center"
-              bg={isDragActive ? 'whiteAlpha.100' : 'inherit'}
-            >
-              <input {...getInputProps()} />
+            <FormControl isInvalid={isDragReject}>
+              <Flex
+                {...getRootProps()}
+                w="full"
+                border="2px"
+                borderColor="gray.600"
+                borderRadius="md"
+                borderStyle="dashed"
+                h="160"
+                p="4"
+                justify="center"
+                align="center"
+                bg={isDragActive ? 'whiteAlpha.100' : 'inherit'}
+              >
+                <input {...getInputProps()} />
 
-              <Text fontWeight="semibold">
-                {getValues().file ? getValues().file.name : 'Solte a foto aqui'}
-              </Text>
-            </Flex>
+                <Text fontWeight="semibold">
+                  {getValues().file
+                    ? getValues().file.name
+                    : 'Solte a foto aqui'}
+                </Text>
+              </Flex>
+
+              <FormErrorMessage>
+                Por favor envie uma imagem nos formatos .jpg ou .png
+              </FormErrorMessage>
+            </FormControl>
 
             <InputField
               id="title"
