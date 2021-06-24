@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { Header } from '../../components/Header';
 import { PictureImage } from '../../components/PictureImage';
 import { PicturesTable } from '../../components/PicturesTable';
@@ -40,6 +40,8 @@ interface Picture {
 }
 
 export default function Album() {
+  const queryClient = useQueryClient();
+
   const router = useRouter();
 
   const album_id = router.query.album_id as string;
@@ -62,6 +64,20 @@ export default function Album() {
   const newPictureModal = useNewPictureModal();
 
   const pictureDetail = usePictureDetail();
+
+  const { mutateAsync: deleteAlbum, isLoading: isDeletingAlbum } = useMutation(
+    async () => {
+      await api.delete(`albums/${album_id}`);
+    }
+  );
+
+  const handleDeleteAlbum = async () => {
+    await deleteAlbum();
+
+    router.back();
+
+    await queryClient.invalidateQueries('ALBUMS');
+  };
 
   return (
     <Container maxW="container.lg" h="100vh">
@@ -124,7 +140,17 @@ export default function Album() {
           )}
         </Box>
 
-        <Flex as="footer" align="center" justify="flex-end" pb="8" pt="4">
+        <Flex as="footer" align="center" justify="space-between" pb="8" pt="4">
+          <Button
+            colorScheme="red"
+            variant="ghost"
+            size="md"
+            onClick={handleDeleteAlbum}
+            isLoading={isDeletingAlbum}
+          >
+            Excluir álbum
+          </Button>
+
           <Button colorScheme="blue" size="lg" onClick={newPictureModal.onOpen}>
             Adicionar foto
           </Button>
