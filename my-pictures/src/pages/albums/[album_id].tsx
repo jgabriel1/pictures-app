@@ -3,7 +3,6 @@ import {
   Flex,
   Heading,
   Text,
-  Grid,
   Box,
   Button,
   Menu,
@@ -19,6 +18,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { Header } from '../../components/Header';
 import { PictureImageThumbnail } from '../../components/PictureImage';
 import { PicturesTable } from '../../components/PicturesTable';
+import { ImageGrid } from '../../components/ImageGrid';
 import {
   PictureDetailModal,
   usePictureDetail,
@@ -138,7 +138,7 @@ export default function Album() {
           </Flex>
 
           {albumViewMode === 'GRID' ? (
-            <Grid templateColumns="repeat(3, 1fr)" gap={8}>
+            <ImageGrid>
               {pictures &&
                 pictures.map(picture => (
                   <Box
@@ -151,14 +151,16 @@ export default function Album() {
                     borderRadius="lg"
                     onClick={() => pictureDetail.onOpen(picture)}
                   >
-                    <PictureImageThumbnail imageId={picture.storage_name} />
+                    <Flex flexDir="column" h="full" justify="space-between">
+                      <PictureImageThumbnail imageId={picture.storage_name} />
 
-                    <Text fontSize="lg" fontWeight="medium" mt="2">
-                      {picture.title}
-                    </Text>
+                      <Text fontSize="lg" fontWeight="medium" mt="2">
+                        {picture.title}
+                      </Text>
+                    </Flex>
                   </Box>
                 ))}
-            </Grid>
+            </ImageGrid>
           ) : (
             <PicturesTable pictures={pictures} />
           )}

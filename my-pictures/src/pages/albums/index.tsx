@@ -2,6 +2,7 @@ import { Box, Button, Container, Flex, Grid, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { Header } from '../../components/Header';
 import { PictureImageThumbnail } from '../../components/PictureImage';
+import { ImageGrid } from '../../components/ImageGrid';
 import { useAlbums } from '../../contexts/albums';
 import {
   CreateNewAlbumModal,
@@ -26,7 +27,7 @@ export default function Albums() {
         <Header />
 
         <Box as="main" flex="1" overflowY="auto">
-          <Grid templateColumns="repeat(3, 1fr)" gap={8}>
+          <ImageGrid>
             {albums &&
               albums.map(album => (
                 <Box
@@ -51,7 +52,7 @@ export default function Albums() {
                   <Text>{album.description}</Text>
                 </Box>
               ))}
-          </Grid>
+          </ImageGrid>
         </Box>
 
         <Flex as="footer" align="center" justify="flex-end" pb="8" pt="4">
