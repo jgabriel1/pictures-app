@@ -1,4 +1,12 @@
-import { Box, Button, Container, Flex, Grid, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Center,
+  Container,
+  Flex,
+  Text,
+  Spinner,
+} from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { Header } from '../../components/Header';
 import { PictureImageThumbnail } from '../../components/PictureImage';
@@ -9,6 +17,7 @@ import {
   useNewAlbumModal,
 } from '../../components/CreateNewAlbumModal';
 import { withAuthRequired } from '../../utils/withAuthRequired';
+import React from 'react';
 
 export default function Albums() {
   const router = useRouter();
@@ -27,9 +36,19 @@ export default function Albums() {
         <Header />
 
         <Box as="main" flex="1">
-          <ImageGrid>
-            {albums &&
-              albums.map(album => (
+          {!albums ? (
+            <Center h="full">
+              <Spinner size="xl" />
+            </Center>
+          ) : albums.length === 0 ? (
+            <Center h="full" flexDir="column" fontSize="sm" color="gray.400">
+              <Text mb="2">Você ainda não possui nenhum álbum.</Text>
+
+              <Text fontWeight="bold">Crie um novo álbum!</Text>
+            </Center>
+          ) : (
+            <ImageGrid>
+              {albums.map(album => (
                 <Box
                   as="button"
                   textAlign="left"
@@ -52,7 +71,8 @@ export default function Albums() {
                   <Text>{album.description}</Text>
                 </Box>
               ))}
-          </ImageGrid>
+            </ImageGrid>
+          )}
         </Box>
 
         <Flex as="footer" align="center" justify="flex-end" pb="8" pt="4">

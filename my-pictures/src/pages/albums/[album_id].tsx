@@ -12,6 +12,8 @@ import {
   MenuItemOption,
   useToast,
   HStack,
+  Center,
+  Spinner,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -117,7 +119,7 @@ export default function Album() {
         <Header />
 
         <Box as="main" flex="1">
-          <Flex w="full" justify="space-between" align="center" mb="8">
+          <Flex w="full" justify="space-between" align="center">
             <Box>
               <Heading fontSize="2xl" mb="2">
                 {album?.title}
@@ -148,29 +150,38 @@ export default function Album() {
             </HStack>
           </Flex>
 
-          {albumViewMode === 'GRID' ? (
-            <ImageGrid>
-              {pictures &&
-                pictures.map(picture => (
-                  <Box
-                    as="button"
-                    textAlign="left"
-                    _hover={{ cursor: 'pointer' }}
-                    key={`pictures:${picture.id}`}
-                    p="4"
-                    bg="gray.700"
-                    borderRadius="lg"
-                    onClick={() => pictureDetail.onOpen(picture)}
-                  >
-                    <Flex flexDir="column" h="full" justify="space-between">
-                      <PictureImageThumbnail imageId={picture.storage_name} />
+          {!pictures ? (
+            <Center h="full">
+              <Spinner size="xl" />
+            </Center>
+          ) : pictures.length === 0 ? (
+            <Center h="full" flexDir="column" fontSize="sm" color="gray.400">
+              <Text mb="2">Esse álbum ainda não possui nenhuma foto.</Text>
 
-                      <Text fontSize="lg" fontWeight="medium" mt="2">
-                        {picture.title}
-                      </Text>
-                    </Flex>
-                  </Box>
-                ))}
+              <Text fontWeight="bold">Adicione uma foto!</Text>
+            </Center>
+          ) : albumViewMode === 'GRID' ? (
+            <ImageGrid mt="8">
+              {pictures.map(picture => (
+                <Box
+                  as="button"
+                  textAlign="left"
+                  _hover={{ cursor: 'pointer' }}
+                  key={`pictures:${picture.id}`}
+                  p="4"
+                  bg="gray.700"
+                  borderRadius="lg"
+                  onClick={() => pictureDetail.onOpen(picture)}
+                >
+                  <Flex flexDir="column" h="full" justify="space-between">
+                    <PictureImageThumbnail imageId={picture.storage_name} />
+
+                    <Text fontSize="lg" fontWeight="medium" mt="2">
+                      {picture.title}
+                    </Text>
+                  </Flex>
+                </Box>
+              ))}
             </ImageGrid>
           ) : (
             <PicturesTable pictures={pictures} />
