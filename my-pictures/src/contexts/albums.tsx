@@ -1,7 +1,8 @@
 import { useBoolean } from '@chakra-ui/react';
-import { createContext, FC, useContext } from 'react';
+import { createContext, FC, useContext, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { api } from '../services/api';
+import { useAuth } from './auth';
 
 interface Album {
   id: string;
@@ -12,13 +13,14 @@ interface Album {
 
 interface AlbumsContextData {
   albums: Album[];
-  fetchAlbums: () => void;
 }
 
 const AlbumsContext = createContext({} as AlbumsContextData);
 
 export const AlbumsProvider: FC = ({ children }) => {
   const [shouldFetchAlbums, dispatchShouldFetch] = useBoolean(false);
+
+  const { isLoggedIn } = useAuth();
 
   const { data: albums } = useQuery<Album[]>(
     'ALBUMS',
@@ -30,12 +32,14 @@ export const AlbumsProvider: FC = ({ children }) => {
     { enabled: shouldFetchAlbums }
   );
 
-  const fetchAlbums = () => {
-    dispatchShouldFetch.on();
-  };
+  useEffect(() => {
+    if (isLoggedIn) {
+      dispatchShouldFetch.on();
+    }
+  }, [isLoggedIn]);
 
   return (
-    <AlbumsContext.Provider value={{ albums: albums ?? [], fetchAlbums }}>
+    <AlbumsContext.Provider value={{ albums: albums ?? [] }}>
       {children}
     </AlbumsContext.Provider>
   );
@@ -46,7 +50,7 @@ export const useAlbums = () => useContext(AlbumsContext);
 export const useAlbum = (albumId: string) => {
   const { albums } = useAlbums();
 
-  const album = albums.find(_album => _album.id === albumId) as Album;
+  const album = albums.find(_album => _album.id === albumId);
 
-  return album;
+  return album || null;
 };

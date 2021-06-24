@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import { Box, Button, Container, Flex, Grid, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { Header } from '../../components/Header';
@@ -12,15 +11,11 @@ import {
 export default function Albums() {
   const router = useRouter();
 
-  const { albums, fetchAlbums } = useAlbums();
+  const { albums } = useAlbums();
 
   const handleNavigateToAlbumPictures = (albumId: string) => {
     router.push(`/albums/${albumId}`);
   };
-
-  useEffect(() => {
-    fetchAlbums();
-  }, []);
 
   const { isOpen, onClose, onOpen } = useNewAlbumModal();
 

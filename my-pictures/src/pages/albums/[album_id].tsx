@@ -112,10 +112,10 @@ export default function Album() {
           <Flex w="full" justify="space-between" align="center" mb="8">
             <Box>
               <Heading fontSize="2xl" mb="2">
-                {album.title}
+                {album?.title}
               </Heading>
 
-              <Text fontSize="md">{album.description}</Text>
+              <Text fontSize="md">{album?.description}</Text>
             </Box>
 
             <Menu>

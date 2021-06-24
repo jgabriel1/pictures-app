@@ -14,6 +14,7 @@ interface LoginResponse {
 }
 
 interface AuthContextData {
+  isLoggedIn: boolean;
   login: (info: LoginInformation) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -71,7 +72,7 @@ export const AuthProvider: FC = ({ children }) => {
   }, [token]);
 
   return (
-    <AuthContext.Provider value={{ login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn: !!token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
