@@ -81,8 +81,6 @@ export default function Album() {
     }
   );
 
-  console.log(pictures);
-
   const handleDeleteAlbum = async () => {
     // Soft check for business rule, the backend won't allow this
     if (pictures && pictures.length > 0) {
@@ -125,7 +123,7 @@ export default function Album() {
                 Visualização
               </MenuButton>
 
-              <MenuList minW="150" onChange={console.log}>
+              <MenuList minW="150">
                 <MenuOptionGroup
                   type="radio"
                   value={albumViewMode}

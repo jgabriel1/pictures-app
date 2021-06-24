@@ -21,17 +21,12 @@ export default function Home() {
     router.push('signup');
   };
 
-  const handleSubmitLogonForm = handleSubmit(
-    async data => {
-      await login({
-        email: data.email,
-        password: data.password,
-      });
-    },
-    error => {
-      console.log(error);
-    }
-  );
+  const handleSubmitLogonForm = handleSubmit(async data => {
+    await login({
+      email: data.email,
+      password: data.password,
+    });
+  });
 
   return (
     <CenterContainer as="form" onSubmit={handleSubmitLogonForm}>
