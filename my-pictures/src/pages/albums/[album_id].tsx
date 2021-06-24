@@ -11,9 +11,10 @@ import {
   MenuOptionGroup,
   MenuItemOption,
   useToast,
+  HStack,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { Header } from '../../components/Header';
 import { PictureImageThumbnail } from '../../components/PictureImage';
@@ -27,6 +28,10 @@ import {
   SendNewPictureModal,
   useNewPictureModal,
 } from '../../components/SendNewPictureModal';
+import {
+  EditAlbumModal,
+  useEditAlbumModal,
+} from '../../components/EditAlbumModal';
 import { useAlbum } from '../../contexts/albums';
 import { api } from '../../services/api';
 import { withAuthRequired } from '../../utils/withAuthRequired';
@@ -68,6 +73,8 @@ export default function Album() {
   const newPictureModal = useNewPictureModal();
 
   const pictureDetail = usePictureDetail();
+
+  const editAlbumModal = useEditAlbumModal();
 
   const { mutateAsync: deleteAlbum, isLoading: isDeletingAlbum } = useMutation(
     async () => {
@@ -119,22 +126,26 @@ export default function Album() {
               <Text fontSize="md">{album?.description}</Text>
             </Box>
 
-            <Menu>
-              <MenuButton as={Button} mr="2">
-                Visualização
-              </MenuButton>
+            <HStack spacing="4">
+              <Button onClick={editAlbumModal.onOpen}>Editar</Button>
 
-              <MenuList minW="150">
-                <MenuOptionGroup
-                  type="radio"
-                  value={albumViewMode}
-                  onChange={v => setAlbumViewMode(v as 'GRID' | 'TABLE')}
-                >
-                  <MenuItemOption value="GRID">Miniaturas</MenuItemOption>
-                  <MenuItemOption value="TABLE">Tabela</MenuItemOption>
-                </MenuOptionGroup>
-              </MenuList>
-            </Menu>
+              <Menu>
+                <MenuButton as={Button} mr="2">
+                  Visualização
+                </MenuButton>
+
+                <MenuList minW="150">
+                  <MenuOptionGroup
+                    type="radio"
+                    value={albumViewMode}
+                    onChange={v => setAlbumViewMode(v as 'GRID' | 'TABLE')}
+                  >
+                    <MenuItemOption value="GRID">Miniaturas</MenuItemOption>
+                    <MenuItemOption value="TABLE">Tabela</MenuItemOption>
+                  </MenuOptionGroup>
+                </MenuList>
+              </Menu>
+            </HStack>
           </Flex>
 
           {albumViewMode === 'GRID' ? (
@@ -186,6 +197,8 @@ export default function Album() {
       <SendNewPictureModal albumId={album_id} {...newPictureModal} />
 
       <PictureDetailModal albumId={album_id} {...pictureDetail} />
+
+      {album && <EditAlbumModal album={album} {...editAlbumModal} />}
     </Container>
   );
 }
