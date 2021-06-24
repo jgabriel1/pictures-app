@@ -11,14 +11,17 @@ import {
   MenuList,
   MenuOptionGroup,
   MenuItemOption,
-  useDisclosure,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { Header } from '../../components/Header';
 import { PictureImage } from '../../components/PictureImage';
 import { PicturesTable } from '../../components/PicturesTable';
+import {
+  PictureDetailModal,
+  usePictureDetail,
+} from '../../components/PictureDetailModal';
 import {
   SendNewPictureModal,
   useNewPictureModal,
@@ -56,7 +59,9 @@ export default function Album() {
 
   const [albumViewMode, setAlbumViewMode] = useState<'GRID' | 'TABLE'>('GRID');
 
-  const { isOpen, onClose, onOpen } = useNewPictureModal();
+  const newPictureModal = useNewPictureModal();
+
+  const pictureDetail = usePictureDetail();
 
   return (
     <Container maxW="container.lg" h="100vh">
@@ -100,6 +105,7 @@ export default function Album() {
                     p="4"
                     bg="gray.700"
                     borderRadius="lg"
+                    onClick={() => pictureDetail.onOpen(picture)}
                     /*
                 TODO: Click to open a modal with full picture, title on top and
                 description on bottom
@@ -119,17 +125,15 @@ export default function Album() {
         </Box>
 
         <Flex as="footer" align="center" justify="flex-end" pb="8" pt="4">
-          <Button colorScheme="blue" size="lg" onClick={onOpen}>
+          <Button colorScheme="blue" size="lg" onClick={newPictureModal.onOpen}>
             Adicionar foto
           </Button>
         </Flex>
       </Flex>
 
-      <SendNewPictureModal
-        albumId={album_id}
-        isOpen={isOpen}
-        onClose={onClose}
-      />
+      <SendNewPictureModal albumId={album_id} {...newPictureModal} />
+
+      <PictureDetailModal albumId={album_id} {...pictureDetail} />
     </Container>
   );
 }
