@@ -23,7 +23,7 @@ import { InputField } from './InputField';
 import { format as formatDate } from 'date-fns';
 
 interface NewPictureFormData {
-  file: File;
+  image: File;
   title: string;
   description: string;
   acquisition_date: string;
@@ -35,7 +35,7 @@ interface SendNewPictureModalProps extends Omit<ModalProps, 'children'> {}
 export const SendNewPictureModal = ({
   ...modalProps
 }: SendNewPictureModalProps) => {
-  const { register, handleSubmit, formState, setValue, getValues, reset } =
+  const { register, handleSubmit, formState, setValue, getValues } =
     useForm<NewPictureFormData>();
 
   const handleSubmitNewPicture = handleSubmit(async data => {
@@ -44,15 +44,15 @@ export const SendNewPictureModal = ({
 
   const { getRootProps, getInputProps, isDragActive, isDragReject } =
     useDropzone({
-      onDropAccepted: async ([file]) => {
-        setValue('file', file);
-        setValue('title', file.name);
+      onDropAccepted: async ([image]) => {
+        setValue('image', image);
+        setValue('title', image.name);
         setValue(
           'acquisition_date',
-          formatDate(new Date(file.lastModified), "yyyy-MM-dd'T'hh:mm")
+          formatDate(new Date(image.lastModified), "yyyy-MM-dd'T'hh:mm")
         );
 
-        const { vibrant } = await getPalette(URL.createObjectURL(file));
+        const { vibrant } = await getPalette(URL.createObjectURL(image));
 
         setValue('main_color', vibrant || '');
       },
@@ -87,8 +87,8 @@ export const SendNewPictureModal = ({
                 <input {...getInputProps()} />
 
                 <Text fontWeight="semibold">
-                  {getValues().file
-                    ? getValues().file.name
+                  {getValues().image
+                    ? getValues().image.name
                     : 'Solte a foto aqui'}
                 </Text>
               </Flex>
