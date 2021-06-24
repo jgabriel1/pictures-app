@@ -16,6 +16,7 @@ import {
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useDropzone } from 'react-dropzone';
+import { getPalette } from 'react-palette';
 import { InputField } from './InputField';
 import { format as formatDate } from 'date-fns';
 
@@ -39,14 +40,19 @@ export const SendNewPictureModal = ({
     console.log(data);
   });
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: ([file]) => {
-      setValue('file', file);
-      setValue('title', file.name);
-      setValue(
-        'acquisition_date',
-        formatDate(new Date(file.lastModified), "yyyy-MM-dd'T'hh:mm")
-      );
+  const { getRootProps, getInputProps, isDragActive, isDragReject } =
+    useDropzone({
+      onDropAccepted: async ([file]) => {
+        setValue('file', file);
+        setValue('title', file.name);
+        setValue(
+          'acquisition_date',
+          formatDate(new Date(file.lastModified), "yyyy-MM-dd'T'hh:mm")
+        );
+
+        const { vibrant } = await getPalette(URL.createObjectURL(file));
+
+        setValue('main_color', vibrant || '');
     },
   });
 
