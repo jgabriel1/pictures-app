@@ -1,8 +1,8 @@
 import { createContext, FC, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { destroyCookie, parseCookies, setCookie } from 'nookies';
-import { api } from '../services/api';
 import { useToast } from '@chakra-ui/react';
+import { api } from '../services/api';
 
 interface LoginInformation {
   email: string;
@@ -44,6 +44,8 @@ export const AuthProvider: FC = ({ children }) => {
       });
 
       setToken(data.auth_token);
+
+      router.push('/albums');
     } catch {
       toast({
         status: 'error',
@@ -55,6 +57,8 @@ export const AuthProvider: FC = ({ children }) => {
 
   const logout = async () => {
     setToken('');
+
+    router.push('/');
   };
 
   useEffect(() => {
@@ -62,12 +66,8 @@ export const AuthProvider: FC = ({ children }) => {
       api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
       setCookie(undefined, TOKEN_COOKIE_KEY, token);
-
-      router.push('/albums');
     } else {
       destroyCookie(undefined, TOKEN_COOKIE_KEY);
-
-      router.push('/');
     }
   }, [token]);
 
