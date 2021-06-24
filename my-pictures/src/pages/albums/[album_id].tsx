@@ -11,6 +11,7 @@ import {
   MenuList,
   MenuOptionGroup,
   MenuItemOption,
+  useToast,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -40,6 +41,8 @@ interface Picture {
 }
 
 export default function Album() {
+  const toast = useToast({ isClosable: true, duration: 3000 });
+
   const queryClient = useQueryClient();
 
   const router = useRouter();
@@ -67,16 +70,39 @@ export default function Album() {
 
   const { mutateAsync: deleteAlbum, isLoading: isDeletingAlbum } = useMutation(
     async () => {
-      await api.delete(`albums/${album_id}`);
+      try {
+        await api.delete(`albums/${album_id}`);
+      } catch {
+        toast({
+          status: 'error',
+          title: 'Erro ao excluir álbum.',
+        });
+      }
     }
   );
 
+  console.log(pictures);
+
   const handleDeleteAlbum = async () => {
+    // Soft check for business rule, the backend won't allow this
+    if (pictures && pictures.length > 0) {
+      return toast({
+        status: 'error',
+        title: 'Erro ao excluir álbum',
+        description: 'Não é possível excluir um álbum que não esteja vazio.',
+      });
+    }
+
     await deleteAlbum();
 
     router.back();
 
     await queryClient.invalidateQueries('ALBUMS');
+
+    toast({
+      status: 'success',
+      title: 'Álbum excluído com sucesso.',
+    });
   };
 
   return (

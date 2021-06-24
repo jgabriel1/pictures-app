@@ -14,6 +14,7 @@ import {
   Text,
   FormControl,
   FormErrorMessage,
+  useToast,
 } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -22,8 +23,8 @@ import { useDropzone } from 'react-dropzone';
 import { getPalette } from 'react-palette';
 import { format as formatDate } from 'date-fns';
 import { InputField } from './InputField';
-import { api } from '../services/api';
 import { TextareaField } from './TextareaField';
+import { api } from '../services/api';
 
 interface NewPictureFormData {
   image: File;
@@ -41,29 +42,44 @@ export const SendNewPictureModal = ({
   albumId,
   ...modalProps
 }: SendNewPictureModalProps) => {
+  const toast = useToast({ duration: 3000, isClosable: true });
+
   const queryClient = useQueryClient();
 
   const { register, handleSubmit, formState, setValue, getValues, reset } =
     useForm<NewPictureFormData>();
 
   const handleSubmitNewPicture = handleSubmit(async data => {
-    const formData = new FormData();
+    try {
+      const formData = new FormData();
 
-    formData.set('image', data.image);
-    formData.set('title', data.title);
-    formData.set('description', data.description);
-    formData.set('acquisition_date', data.acquisition_date);
-    formData.set('main_color', data.main_color);
-    formData.set('album_id', albumId);
+      formData.set('image', data.image);
+      formData.set('title', data.title);
+      formData.set('description', data.description);
+      formData.set('acquisition_date', data.acquisition_date);
+      formData.set('main_color', data.main_color);
+      formData.set('album_id', albumId);
 
-    await api.post('pictures', formData);
+      await api.post('pictures', formData);
 
-    // Signal to reload all pictures for this album
-    await queryClient.invalidateQueries({
-      queryKey: ['PICTURES', albumId],
-    });
+      toast({
+        status: 'success',
+        title: 'Foto enviada com sucesso.',
+      });
 
-    modalProps.onClose();
+      // Signal to reload all pictures for this album
+      await queryClient.invalidateQueries({
+        queryKey: ['PICTURES', albumId],
+      });
+
+      modalProps.onClose();
+    } catch {
+      toast({
+        status: 'error',
+        title: 'Erro no envio da foto',
+        description: 'Ocorreu um erro no envio da foto, tente novamente',
+      });
+    }
   });
 
   const { getRootProps, getInputProps, isDragActive, isDragReject } =
