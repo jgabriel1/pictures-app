@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { CenterContainer } from '../components/CenterContainer';
 import { InputField } from '../components/InputField';
 import { useAuth } from '../contexts/auth';
+import { withGuestRequired } from '../utils/withGuestRequired';
 
 interface LogonFormData {
   email: string;
@@ -73,3 +74,9 @@ export default function Home() {
     </CenterContainer>
   );
 }
+
+export const getServerSideProps = withGuestRequired(async () => {
+  return {
+    props: {},
+  };
+});

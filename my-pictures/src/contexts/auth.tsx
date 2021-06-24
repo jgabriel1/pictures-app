@@ -21,7 +21,7 @@ interface AuthContextData {
 
 const AuthContext = createContext({} as AuthContextData);
 
-const TOKEN_STORAGE_KEY = '@my.Pictures:authToken';
+export const TOKEN_COOKIE_KEY = '@my.Pictures:authToken';
 
 export const AuthProvider: FC = ({ children }) => {
   const toast = useToast({ isClosable: true, duration: 3000 });
@@ -31,7 +31,7 @@ export const AuthProvider: FC = ({ children }) => {
   const [token, setToken] = useState(() => {
     const cookies = parseCookies();
 
-    const storedToken = cookies[TOKEN_STORAGE_KEY];
+    const storedToken = cookies[TOKEN_COOKIE_KEY];
 
     return storedToken;
   });
@@ -61,11 +61,11 @@ export const AuthProvider: FC = ({ children }) => {
     if (token) {
       api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
-      setCookie(undefined, TOKEN_STORAGE_KEY, token);
+      setCookie(undefined, TOKEN_COOKIE_KEY, token);
 
       router.push('/albums');
     } else {
-      destroyCookie(undefined, TOKEN_STORAGE_KEY);
+      destroyCookie(undefined, TOKEN_COOKIE_KEY);
 
       router.push('/');
     }

@@ -29,6 +29,10 @@ import {
 } from '../../components/SendNewPictureModal';
 import { useAlbum } from '../../contexts/albums';
 import { api } from '../../services/api';
+import { GetServerSideProps } from 'next';
+import { parseCookies } from 'nookies';
+import { TOKEN_COOKIE_KEY } from '../../contexts/auth';
+import { withAuthRequired } from '../../utils/withAuthRequired';
 
 interface Picture {
   id: string;
@@ -186,3 +190,9 @@ export default function Album() {
     </Container>
   );
 }
+
+export const getServerSideProps = withAuthRequired(async () => {
+  return {
+    props: {},
+  };
+});

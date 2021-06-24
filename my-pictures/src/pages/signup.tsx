@@ -13,6 +13,7 @@ import { useForm } from 'react-hook-form';
 import { CenterContainer } from '../components/CenterContainer';
 import { InputField } from '../components/InputField';
 import { api } from '../services/api';
+import { withGuestRequired } from '../utils/withGuestRequired';
 
 interface SignUpFormData {
   name: string;
@@ -110,3 +111,9 @@ export default function SignUp() {
     </CenterContainer>
   );
 }
+
+export const getServerSideProps = withGuestRequired(async () => {
+  return {
+    props: {},
+  };
+});

@@ -7,6 +7,7 @@ import {
   CreateNewAlbumModal,
   useNewAlbumModal,
 } from '../../components/CreateNewAlbumModal';
+import { withAuthRequired } from '../../utils/withAuthRequired';
 
 export default function Albums() {
   const router = useRouter();
@@ -64,3 +65,9 @@ export default function Albums() {
     </Container>
   );
 }
+
+export const getServerSideProps = withAuthRequired(async () => {
+  return {
+    props: {},
+  };
+});
