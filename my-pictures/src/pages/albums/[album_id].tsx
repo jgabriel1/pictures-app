@@ -17,7 +17,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { Header } from '../../components/Header';
-import { PictureImage } from '../../components/PictureImage';
+import { PictureImageThumbnail } from '../../components/PictureImage';
 import { PicturesTable } from '../../components/PicturesTable';
 import {
   PictureDetailModal,
@@ -153,7 +153,7 @@ export default function Album() {
                 description on bottom
                 */
                   >
-                    <PictureImage imageId={picture.storage_name} />
+                    <PictureImageThumbnail imageId={picture.storage_name} />
 
                     <Text fontSize="lg" fontWeight="medium" mt="2">
                       {picture.title}

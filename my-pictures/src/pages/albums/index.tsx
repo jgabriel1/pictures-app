@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Box, Button, Container, Flex, Grid, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { Header } from '../../components/Header';
-import { PictureImage } from '../../components/PictureImage';
+import { PictureImageThumbnail } from '../../components/PictureImage';
 import { useAlbums } from '../../contexts/albums';
 import {
   CreateNewAlbumModal,
@@ -40,7 +40,7 @@ export default function Albums() {
                   borderRadius="lg"
                   onClick={() => handleNavigateToAlbumPictures(album.id)}
                 >
-                  <PictureImage
+                  <PictureImageThumbnail
                     imageId={album.cover_picture_name}
                     alt={`${album.title}-cover`}
                   />
