@@ -11,6 +11,7 @@ import {
   Button,
   useToast,
   Center,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
@@ -34,6 +35,18 @@ export const PictureDetailModal = ({
   albumId,
   ...modalProps
 }: PictureDetailModalProps) => {
+  const modalSize = useBreakpointValue({
+    base: 'md',
+    md: 'full',
+    lg: 'full',
+  });
+
+  const modalMargin = useBreakpointValue({
+    base: 'inherit',
+    md: '16',
+    lg: '32',
+  });
+
   const toast = useToast({
     isClosable: true,
     duration: 3000,
@@ -69,10 +82,10 @@ export const PictureDetailModal = ({
   };
 
   return (
-    <Modal {...modalProps} size="full">
+    <Modal {...modalProps} size={modalSize}>
       <ModalOverlay />
 
-      <ModalContent m="32">
+      <ModalContent m={modalMargin}>
         <ModalCloseButton />
 
         <ModalHeader>{picture?.title}</ModalHeader>
