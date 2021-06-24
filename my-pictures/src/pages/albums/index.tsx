@@ -1,9 +1,13 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Box, Button, Container, Flex, Grid, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { Header } from '../../components/Header';
 import { PictureImage } from '../../components/PictureImage';
 import { useAlbums } from '../../contexts/albums';
+import {
+  CreateNewAlbumModal,
+  useNewAlbumModal,
+} from '../../components/CreateNewAlbumModal';
 
 export default function Albums() {
   const router = useRouter();
@@ -17,6 +21,8 @@ export default function Albums() {
   useEffect(() => {
     fetchAlbums();
   }, []);
+
+  const { isOpen, onClose, onOpen } = useNewAlbumModal();
 
   return (
     <Container maxW="container.lg" h="100vh">
@@ -50,11 +56,13 @@ export default function Albums() {
         </Box>
 
         <Flex as="footer" align="center" justify="flex-end" pb="8" pt="4">
-          <Button colorScheme="blue" size="lg">
+          <Button colorScheme="blue" size="lg" onClick={onOpen}>
             Criar novo álbum
           </Button>
         </Flex>
       </Flex>
+
+      <CreateNewAlbumModal isOpen={isOpen} onClose={onClose} />
     </Container>
   );
 }
