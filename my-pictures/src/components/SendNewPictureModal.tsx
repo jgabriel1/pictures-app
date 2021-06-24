@@ -15,12 +15,14 @@ import {
   FormControl,
   FormErrorMessage,
 } from '@chakra-ui/react';
-import React from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { useQueryClient } from 'react-query';
 import { useDropzone } from 'react-dropzone';
 import { getPalette } from 'react-palette';
-import { InputField } from './InputField';
 import { format as formatDate } from 'date-fns';
+import { InputField } from './InputField';
+import { api } from '../services/api';
 
 interface NewPictureFormData {
   image: File;
@@ -30,16 +32,37 @@ interface NewPictureFormData {
   main_color: string;
 }
 
-interface SendNewPictureModalProps extends Omit<ModalProps, 'children'> {}
+interface SendNewPictureModalProps extends Omit<ModalProps, 'children'> {
+  albumId: string;
+}
 
 export const SendNewPictureModal = ({
+  albumId,
   ...modalProps
 }: SendNewPictureModalProps) => {
-  const { register, handleSubmit, formState, setValue, getValues } =
+  const queryClient = useQueryClient();
+
+  const { register, handleSubmit, formState, setValue, getValues, reset } =
     useForm<NewPictureFormData>();
 
   const handleSubmitNewPicture = handleSubmit(async data => {
-    console.log(data);
+    const formData = new FormData();
+
+    formData.set('image', data.image);
+    formData.set('title', data.title);
+    formData.set('description', data.description);
+    formData.set('acquisition_date', data.acquisition_date);
+    formData.set('main_color', data.main_color);
+    formData.set('album_id', albumId);
+
+    await api.post('pictures', formData);
+
+    // Signal to reload all pictures for this album
+    await queryClient.invalidateQueries({
+      queryKey: ['PICTURES', albumId],
+    });
+
+    modalProps.onClose();
   });
 
   const { getRootProps, getInputProps, isDragActive, isDragReject } =
@@ -56,9 +79,20 @@ export const SendNewPictureModal = ({
 
         setValue('main_color', vibrant || '');
       },
-      maxFiles: 1,
-      accept: 'image/jpeg, image/png',
+      maxFiles: 1, // Only allow a single file to be sent
+      accept: 'image/jpeg, image/png', // Accepted file types
     });
+
+  useEffect(() => {
+    if (!modalProps.isOpen)
+      reset({
+        image: undefined,
+        title: '',
+        description: '',
+        main_color: '',
+        acquisition_date: '',
+      });
+  }, [modalProps.isOpen]);
 
   return (
     <Modal {...modalProps} size="lg">
@@ -141,7 +175,11 @@ export const SendNewPictureModal = ({
         </ModalBody>
 
         <ModalFooter>
-          <Button type="submit" colorScheme="blue">
+          <Button
+            type="submit"
+            colorScheme="blue"
+            isLoading={formState.isSubmitting}
+          >
             Enviar
           </Button>
         </ModalFooter>

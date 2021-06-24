@@ -125,7 +125,11 @@ export default function Album() {
         </Flex>
       </Flex>
 
-      <SendNewPictureModal isOpen={isOpen} onClose={onClose} />
+      <SendNewPictureModal
+        albumId={album_id}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </Container>
   );
 }
