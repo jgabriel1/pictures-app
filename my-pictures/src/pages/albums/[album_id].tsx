@@ -143,15 +143,14 @@ export default function Album() {
               {pictures &&
                 pictures.map(picture => (
                   <Box
+                    as="button"
+                    textAlign="left"
+                    _hover={{ cursor: 'pointer' }}
                     key={`pictures:${picture.id}`}
                     p="4"
                     bg="gray.700"
                     borderRadius="lg"
                     onClick={() => pictureDetail.onOpen(picture)}
-                    /*
-                TODO: Click to open a modal with full picture, title on top and
-                description on bottom
-                */
                   >
                     <PictureImageThumbnail imageId={picture.storage_name} />
 

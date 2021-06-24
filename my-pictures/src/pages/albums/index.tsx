@@ -34,6 +34,9 @@ export default function Albums() {
             {albums &&
               albums.map(album => (
                 <Box
+                  as="button"
+                  textAlign="left"
+                  _hover={{ cursor: 'pointer' }}
                   key={`albums:${album.id}`}
                   p="4"
                   bg="gray.700"
