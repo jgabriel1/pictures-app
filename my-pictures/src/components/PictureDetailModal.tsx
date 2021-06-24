@@ -10,6 +10,7 @@ import {
   ModalProps,
   Text,
   Button,
+  useToast,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
@@ -33,16 +34,34 @@ export const PictureDetailModal = ({
   albumId,
   ...modalProps
 }: PictureDetailModalProps) => {
+  const toast = useToast({
+    isClosable: true,
+    duration: 3000,
+  });
+
   const queryClient = useQueryClient();
 
   const { mutateAsync: deletePicture, isLoading: isDeleting } = useMutation(
     async () => {
-      await api.delete(`pictures/${picture?.id}`);
+      try {
+        await api.delete(`pictures/${picture?.id}`);
+      } catch {
+        toast({
+          status: 'error',
+          title: 'Erro ao excluir foto',
+          description: 'Ocorreu um erro ao excluir a foto, tente novamente.',
+        });
+      }
     }
   );
 
   const handleDeletePicture = async () => {
     await deletePicture();
+
+    toast({
+      status: 'success',
+      title: 'Foto excluida com sucesso',
+    });
 
     await queryClient.invalidateQueries(['PICTURES', albumId]);
 
