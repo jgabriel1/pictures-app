@@ -1,19 +1,31 @@
 import path from 'path';
-import { createConnection } from 'typeorm';
+import {
+  ConnectionOptions,
+  createConnection,
+  getConnectionOptions,
+} from 'typeorm';
 
 export const connectToDatabase = async () => {
+  let connectionOptions: ConnectionOptions;
+
+  if (process.env.NODE_ENV === 'PROD') {
+    connectionOptions = await getConnectionOptions();
+  } else {
+    connectionOptions = {
+      type: 'sqlite',
+      name: 'default',
+      database: './database.sqlite',
+      logging: true,
+      entities: [path.resolve(__dirname, '..', 'models', '*.ts')],
+      synchronize: true,
+    };
+  }
+
   let retries = 5;
 
   while (retries) {
     try {
-      await createConnection({
-        type: 'sqlite',
-        name: 'default',
-        database: './database.sqlite',
-        logging: true,
-        entities: [path.resolve(__dirname, '..', 'models', '*.ts')],
-        synchronize: true,
-      });
+      await createConnection(connectionOptions);
 
       console.log('CONNECTED TO DATABASE.');
 
