@@ -8,7 +8,7 @@ export const PictureImage = ({ imageId, ...imageProps }: PictureImageProps) => (
   <Image
     {...imageProps}
     src={`http://localhost:3333/static/uploads/${imageId}`}
-    fallbackSrc="https://via.placeholder.com/200x150?text=my.Pictures"
+    fallbackSrc="https://via.placeholder.com/400x300?text=my.Pictures"
   />
 );
 

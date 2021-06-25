@@ -14,10 +14,13 @@ import {
   HStack,
   Center,
   Spinner,
+  ButtonGroup,
+  MenuDivider,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { isAfter, isBefore } from 'date-fns';
 import { Header } from '../../components/Header';
 import { PictureImageThumbnail } from '../../components/PictureImage';
 import { PicturesTable } from '../../components/PicturesTable';
@@ -48,6 +51,11 @@ interface Picture {
   storage_name: string;
 }
 
+interface VisualizationOptions {
+  viewMode: 'GRID' | 'TABLE';
+  dateOrderMode: 'INCRESCENT' | 'DECRESCENT';
+}
+
 export default function Album() {
   const toast = useToast({ isClosable: true, duration: 3000 });
 
@@ -69,8 +77,6 @@ export default function Album() {
       return responseData.pictures;
     }
   );
-
-  const [albumViewMode, setAlbumViewMode] = useState<'GRID' | 'TABLE'>('GRID');
 
   const newPictureModal = useNewPictureModal();
 
@@ -113,6 +119,28 @@ export default function Album() {
     });
   };
 
+  const [visualizationOptions, setVisualizationOptions] =
+    useState<VisualizationOptions>({
+      viewMode: 'GRID',
+      dateOrderMode: 'DECRESCENT',
+    });
+
+  const orderedPictures = useMemo(() => {
+    return pictures?.sort((a, b) => {
+      const aDate = new Date(a.acquisition_date);
+      const bDate = new Date(b.acquisition_date);
+
+      switch (visualizationOptions.dateOrderMode) {
+        case 'DECRESCENT':
+          return isBefore(aDate, bDate) ? 1 : -1;
+        case 'INCRESCENT':
+          return isAfter(aDate, bDate) ? 1 : -1;
+        default:
+          return 1;
+      }
+    });
+  }, [pictures, visualizationOptions.dateOrderMode]);
+
   return (
     <Container maxW="container.lg" h="100vh">
       <Flex flexDir="column" justify="space-between" h="100%">
@@ -128,41 +156,67 @@ export default function Album() {
               <Text fontSize="md">{album?.description}</Text>
             </Box>
 
-            <HStack spacing="4">
-              <Button onClick={editAlbumModal.onOpen}>Editar</Button>
-
+            <HStack spacing="8">
               <Menu>
                 <MenuButton as={Button} mr="2">
                   Visualização
                 </MenuButton>
 
-                <MenuList minW="150">
+                <MenuList minW="156">
                   <MenuOptionGroup
                     type="radio"
-                    value={albumViewMode}
-                    onChange={v => setAlbumViewMode(v as 'GRID' | 'TABLE')}
+                    title="Modo"
+                    value={visualizationOptions.viewMode}
+                    onChange={v =>
+                      setVisualizationOptions(state => ({
+                        ...state,
+                        viewMode: v as 'GRID' | 'TABLE',
+                      }))
+                    }
                   >
+                    v as 'GRID' | 'TABLE'
                     <MenuItemOption value="GRID">Miniaturas</MenuItemOption>
                     <MenuItemOption value="TABLE">Tabela</MenuItemOption>
+                  </MenuOptionGroup>
+
+                  <MenuDivider />
+
+                  <MenuOptionGroup
+                    type="radio"
+                    title="Ordem de datas"
+                    value={visualizationOptions.dateOrderMode}
+                    onChange={v =>
+                      setVisualizationOptions(state => ({
+                        ...state,
+                        dateOrderMode: v as 'INCRESCENT' | 'DECRESCENT',
+                      }))
+                    }
+                  >
+                    <MenuItemOption value="INCRESCENT">
+                      Crescente
+                    </MenuItemOption>
+                    <MenuItemOption value="DECRESCENT">
+                      Decrescente
+                    </MenuItemOption>
                   </MenuOptionGroup>
                 </MenuList>
               </Menu>
             </HStack>
           </Flex>
 
-          {!pictures ? (
+          {!orderedPictures ? (
             <Center h="full">
               <Spinner size="xl" />
             </Center>
-          ) : pictures.length === 0 ? (
+          ) : orderedPictures.length === 0 ? (
             <Center h="full" flexDir="column" fontSize="sm" color="gray.400">
               <Text mb="2">Esse álbum ainda não possui nenhuma foto.</Text>
 
               <Text fontWeight="bold">Adicione uma foto!</Text>
             </Center>
-          ) : albumViewMode === 'GRID' ? (
+          ) : visualizationOptions.viewMode === 'GRID' ? (
             <ImageGrid mt="8">
-              {pictures.map(picture => (
+              {orderedPictures.map(picture => (
                 <Box
                   as="button"
                   textAlign="left"
@@ -190,18 +244,34 @@ export default function Album() {
 
         <Flex as="footer" align="center" justify="space-between" pb="8" pt="4">
           <Button
-            colorScheme="red"
-            variant="ghost"
             size="md"
-            onClick={handleDeleteAlbum}
+            onClick={() => router.back()}
             isLoading={isDeletingAlbum}
           >
-            Excluir álbum
+            Voltar
           </Button>
 
-          <Button colorScheme="blue" size="lg" onClick={newPictureModal.onOpen}>
-            Adicionar foto
-          </Button>
+          <HStack spacing="8">
+            <ButtonGroup>
+              <Button onClick={editAlbumModal.onOpen}>Editar</Button>
+
+              <Button
+                colorScheme="red"
+                onClick={handleDeleteAlbum}
+                isLoading={isDeletingAlbum}
+              >
+                Excluir
+              </Button>
+            </ButtonGroup>
+
+            <Button
+              colorScheme="blue"
+              size="lg"
+              onClick={newPictureModal.onOpen}
+            >
+              Adicionar foto
+            </Button>
+          </HStack>
         </Flex>
       </Flex>
 
