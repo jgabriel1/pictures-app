@@ -14,6 +14,7 @@ import {
   HStack,
   Center,
   Spinner,
+  ButtonGroup,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -128,9 +129,7 @@ export default function Album() {
               <Text fontSize="md">{album?.description}</Text>
             </Box>
 
-            <HStack spacing="4">
-              <Button onClick={editAlbumModal.onOpen}>Editar</Button>
-
+            <HStack spacing="8">
               <Menu>
                 <MenuButton as={Button} mr="2">
                   Visualização
@@ -190,18 +189,34 @@ export default function Album() {
 
         <Flex as="footer" align="center" justify="space-between" pb="8" pt="4">
           <Button
-            colorScheme="red"
-            variant="ghost"
             size="md"
-            onClick={handleDeleteAlbum}
+            onClick={() => router.back()}
             isLoading={isDeletingAlbum}
           >
-            Excluir álbum
+            Voltar
           </Button>
 
-          <Button colorScheme="blue" size="lg" onClick={newPictureModal.onOpen}>
-            Adicionar foto
-          </Button>
+          <HStack spacing="8">
+            <ButtonGroup>
+              <Button onClick={editAlbumModal.onOpen}>Editar</Button>
+
+              <Button
+                colorScheme="red"
+                onClick={handleDeleteAlbum}
+                isLoading={isDeletingAlbum}
+              >
+                Excluir
+              </Button>
+            </ButtonGroup>
+
+            <Button
+              colorScheme="blue"
+              size="lg"
+              onClick={newPictureModal.onOpen}
+            >
+              Adicionar foto
+            </Button>
+          </HStack>
         </Flex>
       </Flex>
 
