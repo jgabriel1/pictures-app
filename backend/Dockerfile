@@ -10,7 +10,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY tsconfig.json ./
 # copy source code to /app/src folder
-COPY src /app/src
+COPY . /app
 
 # check files list
 RUN ls -a
