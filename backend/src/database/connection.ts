@@ -21,7 +21,7 @@ export const connectToDatabase = async () => {
     };
   }
 
-  let retries = 5;
+  let retries = 10;
 
   while (retries) {
     try {
@@ -31,6 +31,7 @@ export const connectToDatabase = async () => {
 
       break;
     } catch (error) {
+      console.log(error);
       console.log('THERE WAS AN ERROR CONNECTING, RETRYING IN 5 SECONDS.');
 
       retries -= 1;
