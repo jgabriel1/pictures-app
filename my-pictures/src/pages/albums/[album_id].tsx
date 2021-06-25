@@ -174,7 +174,6 @@ export default function Album() {
                       }))
                     }
                   >
-                    v as 'GRID' | 'TABLE'
                     <MenuItemOption value="GRID">Miniaturas</MenuItemOption>
                     <MenuItemOption value="TABLE">Tabela</MenuItemOption>
                   </MenuOptionGroup>
