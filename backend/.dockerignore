@@ -1,0 +1,6 @@
+*.sqlite
+public/uploads/*
+node_modules
+.vscode
+dist
+Dockerfile
