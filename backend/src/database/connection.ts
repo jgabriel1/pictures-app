@@ -16,7 +16,7 @@ export const connectToDatabase = async () => {
       name: 'default',
       database: './database.sqlite',
       logging: true,
-      entities: [path.resolve(__dirname, '..', 'models', '*.ts')],
+      entities: [path.resolve(__dirname, '..', 'models', '{*.ts,*.js}')],
       synchronize: true,
     };
   }
